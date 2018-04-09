@@ -28,16 +28,22 @@ export class Angulartics2On implements AfterContentInit {
   ngAfterContentInit() {
     this.renderer.listen(
       this.elRef.nativeElement,
-      this.angulartics2On || 'click',
-      (event: Event) => this.eventTrack(event),
+      'click',
+      (event: Event) => this.eventTrack(event, 'mouse'),
+    );
+	this.renderer.listen(
+      this.elRef.nativeElement,
+      'keydown',
+      (event: Event) => this.eventTrack(event, 'keyboard'),
     );
   }
 
-  eventTrack(event: Event) {
+  eventTrack(event: Event, string: eventSource) {
     const action = this.angularticsAction; // || this.inferEventName();
     const properties: any = {
       ...this.angularticsProperties,
       eventType: event.type,
+	  dimension1: eventSource
     };
 
     if (this.angularticsCategory) {
